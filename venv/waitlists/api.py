@@ -3,17 +3,27 @@ from ninja import Router
 from typing import List
 from ninja_jwt.authentication import JWTAuth
 
-from .schemas import WaitlistEntryListSchema, WaitlistEntryDetailSchema
+from .schemas import (WaitlistEntryListSchema,
+                      WaitlistEntryDetailSchema,
+                      WaitlistEntryCreateSchema)
 from .models import WaitlistEntry
 
 
 router = Router()
 
-
+# /api/waitlists/
 @router.get("", response=List[WaitlistEntryListSchema], auth=JWTAuth())
 def list_waitlist_entries(request):
     qs = WaitlistEntry.objects.all()
     return qs
+
+#/api/waitlists/
+@router.post("", response=WaitlistEntryDetailSchema)
+def create_waitlist_entry(request,
+                          data: WaitlistEntryCreateSchema):
+    print(data)
+    obj = WaitlistEntry.objects.create(**data.dict())
+    return obj
 
 @router.get("{entry_id}/", response=WaitlistEntryDetailSchema, auth=JWTAuth())
 def get_waitlist_entries(request, entry_id: int):
