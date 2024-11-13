@@ -1,3 +1,5 @@
+import helpers 
+
 from ninja import NinjaAPI, Schema
 
 from ninja_extra import NinjaExtraAPI
@@ -25,6 +27,6 @@ def hello(request):
 # instead of just using @login_required(), it is using auth=JWTAuth()
 @api.get("/me", 
          response=UserSchema, 
-         auth=JWTAuth())
+         auth=helpers.api_auth_user_required)
 def me(request):
     return request.user
